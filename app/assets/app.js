@@ -7,6 +7,14 @@
   var editingIndex = null;
   var activeFilter = 'all';
   var query = '';
+  var subtitles = {
+    invoice: 'Supplier invoices, approvals, filing, duplicates and exceptions — controlled before anything moves forward.',
+    sales: 'Enquiries, quotes, follow-ups and lost-lead risk — every lead gets an owner and a next action.',
+    client: 'Onboarding, documents, payment, folders and handover gates — no client starts with missing pieces.',
+    property: 'Tenant requests, maintenance, owner approvals, scheduling and proof — no property issue disappears in WhatsApp.',
+    practice: 'Bookings, confirmations, documents, payments and no-show risks — front desk work stays visible and controlled.',
+    member: 'Member onboarding, attendance risk, payment follow-ups and reactivation — every member gets a next action.'
+  };
 
   function $(id) { return document.getElementById(id); }
   function escapeHtml(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[c]; }); }
@@ -70,7 +78,7 @@
     var rep = E.report(system, records);
     var visible = filterRecords(validations);
     $('system-title').textContent = config.label;
-    $('system-subtitle').textContent = system === 'invoice' ? 'Supplier invoices, approvals, filing, duplicates and exceptions — controlled before anything moves forward.' : system === 'sales' ? 'Enquiries, quotes, follow-ups and lost-lead risk — every lead gets an owner and a next action.' : 'Onboarding, documents, payment, folders and handover gates — no client starts with missing pieces.';
+    $('system-subtitle').textContent = subtitles[system] || 'A working admin system with live validation, report counts and CSV control.';
     $('record-count').textContent = records.length;
     $('pass-count').textContent = rep.passed;
     $('fail-count').textContent = rep.failed;
