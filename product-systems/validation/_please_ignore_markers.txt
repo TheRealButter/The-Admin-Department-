@@ -1,1 +1,0 @@
-Ignore marker files; validation docs are the important files.
