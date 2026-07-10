@@ -5,19 +5,28 @@ Date: 2026-07-10
 ## Test command
 
 ```bash
-node tests/run-tests.mjs
+NODE_ENV=production node tests/run-tests.mjs
 ```
 
-## Local result
+## Current verification status
 
 ```text
-All six Admin HQ validation tests passed.
+Blocked handoff: final execution requires a fresh checkout / CI / deployment environment.
+```
+
+The regression runner is committed, but this tool session could not execute it against a freshly cloned latest repository because outbound GitHub DNS resolution failed in the container.
+
+Expected clean result after running the command from latest `main`:
+
+```text
+All Admin HQ inventory and production-scale regression tests passed.
 ```
 
 ## Repo test coverage
 
 The committed modular test suite verifies:
 
+- required public/app route files exist.
 - Invoice Admin sample set returns 7 Pass / 3 Fail.
 - Sales Admin sample set returns 7 Pass / 3 Fail.
 - Client Admin sample set returns 7 Pass / 3 Fail.
@@ -27,6 +36,11 @@ The committed modular test suite verifies:
 - Expected failing records are exactly the intended blocked records for all six systems.
 - Report totals, pass counts, and fail counts are calculated from engine output.
 - CSV round-trip preserves records and IDs.
+- sanitized production-scale fixture creates 240 records per system.
+- production-scale fixture contains no email-like data.
+- production-scale fixture contains no 13-digit SA-ID-like values.
+- production-scale fixture produces deterministic failures.
+- production-scale reports return 168 Pass / 72 Fail per system.
 
 ## Current app status
 
@@ -43,6 +57,7 @@ The app is now a modular static Admin HQ v1 for controlled private pilots:
 - `app/practice-admin/index.html` runs Practice Admin.
 - `app/member-admin/index.html` runs Member Admin.
 - `tests/run-tests.mjs` validates all six systems from the shared engine.
+- `tests/fixtures/sanitized-production-scale-data.mjs` generates production-scale sanitized local data.
 
 ## Production note
 
