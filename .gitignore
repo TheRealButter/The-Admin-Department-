@@ -1,0 +1,27 @@
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.credentials.json
+service-account*.json
+
+# Local/private client data
+client-data/
+private-data/
+real-invoices/
+real-leads/
+real-client-documents/
+exports/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs/cache
+*.log
+.cache/
+node_modules/
