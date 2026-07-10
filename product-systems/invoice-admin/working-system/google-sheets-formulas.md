@@ -6,7 +6,9 @@ Assume row 2 is the first data row.
 
 ## Required field check
 
-Column `missing_required_fields` should identify fields that block progress.
+Column `missing_required_fields` should identify missing fields.
+
+Important: a missing field is not automatically a failed record. Some statuses, such as `Needs Capture` and `Missing Info`, exist specifically to hold incomplete records honestly. Missing fields become a validation failure only when the record is trying to move too far forward, for example `Ready for Review`, `Waiting for Approval`, `Approved`, `Filed`, or `Paid`.
 
 Formula pattern:
 
@@ -17,7 +19,7 @@ Formula pattern:
  IF(AND(E2="Invoice", F2=""), "invoice_number", ""),
  IF(AND(E2="Invoice", I2=""), "total_amount", ""),
  IF(M2="", "status", ""),
- IF(AND(M2<>"Filed", M2<>"Paid", O2=""), "assigned_to", ""),
+ IF(AND(NOT(OR(M2="Filed", M2="Paid", M2="Rejected")), O2=""), "assigned_to", ""),
  IF(AND(OR(M2="Waiting for Approval", M2="Approved", M2="Ready for Review"), P2=""), "approval_owner", ""),
  IF(OR(M2="Filed", M2="Paid"), IF(R2="", "document_link", ""), ""),
  IF(OR(M2="Filed", M2="Paid"), IF(S2="", "folder_link", ""), "")
@@ -37,7 +39,7 @@ Column `due_soon_flag` should show `Yes` when the invoice due date is within 48 
 Column `approval_blocked` should show `Yes` when an invoice should not move forward without human approval or review.
 
 ```gs
-=IF(OR(M2="Waiting for Approval", M2="Possible Duplicate", U2="Possible duplicate", P2=""), "Yes", "No")
+=IF(OR(M2="Waiting for Approval", M2="Possible Duplicate", U2="Possible duplicate", AND(OR(M2="Approved", M2="Ready for Review"), P2="")), "Yes", "No")
 ```
 
 ## File blocked
@@ -66,10 +68,12 @@ Column `overdue_next_action` should show `Yes` when next action due date is in t
 
 ## Validation status
 
-Column `validation_status` should fail when a critical block exists.
+Column `validation_status` should fail only when a critical block exists.
+
+This prevents a valid `Needs Capture` or `Missing Info` record from failing simply because it is incomplete. Incomplete records fail only when they are trying to progress into review/approval/filing/payment stages.
 
 ```gs
-=IF(OR(Y2<>"", AA2="Yes", AB2="Yes", AC2="Yes", AD2="Yes"), "Fail", "Pass")
+=IF(OR(AND(Y2<>"", OR(M2="Ready for Review", M2="Waiting for Approval", M2="Approved", M2="Filed", M2="Paid")), AB2="Yes", AC2="Yes", AD2="Yes"), "Fail", "Pass")
 ```
 
 ## Weekly report calculations
